@@ -6,7 +6,6 @@ const retry = require('retry');
 const logger = require('../logger')('WebSocketTransport');
 const Message = require('../Message');
 
-const WS_SUBPROTOCOL = 'protoo';
 const DEFAULT_RETRY_OPTIONS =
 {
 	retries    : 10,
@@ -103,7 +102,7 @@ class WebSocketTransport extends EventEmitter
 
 			this._ws = new W3CWebSocket(
 				this._url,
-				WS_SUBPROTOCOL,
+				'',
 				options.origin,
 				options.headers,
 				options.requestOptions,

@@ -5,8 +5,6 @@ const websocket = require('websocket');
 const logger = require('../logger')('WebSocketServer');
 const WebSocketTransport = require('./WebSocketTransport');
 
-const WS_SUBPROTOCOL = 'protoo';
-
 class WebSocketServer extends EventEmitter
 {
 	constructor(httpServer, options)
@@ -47,15 +45,6 @@ class WebSocketServer extends EventEmitter
 	{
 		logger.debug('onRequest() [origin:%s | path:"%s"]', request.origin, request.resource);
 
-		// Validate WebSocket sub-protocol.
-		if (request.requestedProtocols.indexOf(WS_SUBPROTOCOL) === -1)
-		{
-			logger.warn('_onRequest() | invalid/missing Sec-WebSocket-Protocol');
-
-			request.reject(403, 'Invalid/missing Sec-WebSocket-Protocol');
-			return;
-		}
-
 		// If there are no listeners, reject the request.
 		if (this.listenerCount('connectionrequest') === 0)
 		{
@@ -87,7 +76,7 @@ class WebSocketServer extends EventEmitter
 				replied = true;
 
 				// Get the WebSocketConnection instance.
-				let connection = request.accept(WS_SUBPROTOCOL, request.origin);
+				let connection = request.accept('', request.origin);
 
 				// Create a new Protoo WebSocket transport.
 				let transport = new WebSocketTransport(connection);
